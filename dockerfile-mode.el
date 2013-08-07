@@ -71,10 +71,11 @@
       (list (read-string "image-name:" nil nil))
      (list docker-image-name)))
   (save-buffer)
-  (shell-command
-   (concat "docker build -t " image-name " " (file-name-directory (buffer-file-name)) "&")
-   "*docker-build-output*")
-  (switch-to-buffer "*docker-build-output*"))
+  (if (stringp image-name)
+      (shell-command
+       (concat "docker build -t " image-name " " (file-name-directory (buffer-file-name)) "&")
+       "*docker-build-output*")
+    (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
 ;;;###autoload
 (defun dockerfile-mode ()
@@ -99,3 +100,4 @@
   (run-mode-hooks 'dockerfile-mode-hook))
 
 (provide 'dockerfile-mode)
+
