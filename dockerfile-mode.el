@@ -36,7 +36,7 @@
 (defvar dockerfile-font-lock-keywords
   `(
     ("#.*$" . font-lock-comment-face)
-    ("\\b\\([Ff][Rr][Oo][Mm]\\|[mM][aA][iI][nN][tT][aA][iI][nN][eE][rR]\\|[rR][uU][nN]\\|[eE][nN][vV]\\|[cC][mM][dD]\\|[eE][xX][pP][oO][sS][eE]\\|[iI][nN][sS][eE][rR][tT]\\|[cC][oO][pP][yY]\\|[eE][nN][tT][rR][yY][pP][oO][iI][nN][tT]\\|[vV][oO][lL][uU][mM][eE]\\|[aA][dD][dD]\\)\\b" . font-lock-keyword-face)
+    ("^\\([Ff][Rr][Oo][Mm]\\|[mM][aA][iI][nN][tT][aA][iI][nN][eE][rR]\\|[rR][uU][nN]\\|[eE][nN][vV]\\|[cC][mM][dD]\\|[eE][xX][pP][oO][sS][eE]\\|[iI][nN][sS][eE][rR][tT]\\|[cC][oO][pP][yY]\\|[eE][nN][tT][rR][yY][pP][oO][iI][nN][tT]\\|[vV][oO][lL][uU][mM][eE]\\|[aA][dD][dD]\\)\\b" . font-lock-keyword-face)
     ,@(sh-font-lock-keywords)
     ,@(sh-font-lock-keywords-2)
     ,@(sh-font-lock-keywords-1)
