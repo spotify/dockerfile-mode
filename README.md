@@ -5,7 +5,7 @@ A Dockerfile mode for emacs
 
     (add-to-list 'load-path "/your/path/to/dockerfile-mode/")
     (require 'dockerfile-mode)
-    (add-to-list 'auto-mode-alist '("Dockerfile" . dockerfile-mode))
+    (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 Adds syntax highlighting as well as the ability to build the image
 directly (C-c C-b) from the buffer.

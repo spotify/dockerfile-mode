@@ -27,6 +27,9 @@
   :type 'hook
   :group 'dockerfile)
 
+(defcustom dockerfile-use-sudo nil
+  "Runs docker builder command with sudo.")
+
 (defvar dockerfile-mode-syntax-table nil
   "Syntax table used while in `dockerfile-mode'.")
 (setq dockerfile-mode-syntax-table (make-syntax-table))
@@ -73,7 +76,7 @@
   (save-buffer)
   (if (stringp image-name)
       (shell-command
-       (concat "docker build -t " image-name " " (file-name-directory (buffer-file-name)) "&")
+       (concat (if dockerfile-use-sudo "sudo " "") "docker build -t " image-name " " (file-name-directory (buffer-file-name)) "&")
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
