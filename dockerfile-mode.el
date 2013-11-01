@@ -1,18 +1,23 @@
-;;; Copyright (c) 2013 Spotify AB
-;;;
-;;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
-;;; use this file except in compliance with the License. You may obtain a copy of
-;;; the License at
-;;;
-;;; http://www.apache.org/licenses/LICENSE-2.0
-;;;
-;;; Unless required by applicable law or agreed to in writing, software
-;;; distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-;;; WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-;;; License for the specific language governing permissions and limitations under
-;;; the License.
+;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles
+
+;; Copyright (c) 2013 Spotify AB
+;;
+;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
+;; use this file except in compliance with the License. You may obtain a copy of
+;; the License at
+;;
+;; http://www.apache.org/licenses/LICENSE-2.0
+;;
+;; Unless required by applicable law or agreed to in writing, software
+;; distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+;; WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+;; License for the specific language governing permissions and limitations under
+;; the License.
+
+;;; Code:
 
 (require 'sh-script)
+(require 'rx)
 
 (defvar docker-image-name nil)
 
@@ -30,38 +35,41 @@
 (defcustom dockerfile-use-sudo nil
   "Runs docker builder command with sudo.")
 
-(defvar dockerfile-mode-syntax-table nil
-  "Syntax table used while in `dockerfile-mode'.")
-(setq dockerfile-mode-syntax-table (make-syntax-table))
-(modify-syntax-entry ?\# "<" dockerfile-mode-syntax-table)
-(modify-syntax-entry ?\n ">" dockerfile-mode-syntax-table)
-
 (defvar dockerfile-font-lock-keywords
-  `(
-    ("#.*$" . font-lock-comment-face)
-    ("^\\([Ff][Rr][Oo][Mm]\\|[mM][aA][iI][nN][tT][aA][iI][nN][eE][rR]\\|[rR][uU][nN]\\|[eE][nN][vV]\\|[cC][mM][dD]\\|[eE][xX][pP][oO][sS][eE]\\|[iI][nN][sS][eE][rR][tT]\\|[cC][oO][pP][yY]\\|[eE][nN][tT][rR][yY][pP][oO][iI][nN][tT]\\|[vV][oO][lL][uU][mM][eE]\\|[aA][dD][dD]\\)\\b" . font-lock-keyword-face)
+  `(,(cons (rx line-start
+               (group (or "from" "maintainer" "run" "env" "cmd"
+                          "expose" "insert" "copy" "entrypoint"
+                          "volume" "add"))
+               word-boundary)
+           font-lock-keyword-face)
     ,@(sh-font-lock-keywords)
     ,@(sh-font-lock-keywords-2)
-    ,@(sh-font-lock-keywords-1)
-    )
+    ,@(sh-font-lock-keywords-1))
   "Default font-lock-keywords for `dockerfile mode'.")
 
 (defvar dockerfile-mode-map
   (let ((map (make-sparse-keymap))
-	(menu-map (make-sparse-keymap)))
+        (menu-map (make-sparse-keymap)))
     (define-key map "\C-c\C-b" 'dockerfile-build-buffer)
     (define-key map "\C-c\C-z" 'dockerfile-test-function)
     (define-key map "\C-c\C-c" 'comment-region)
     (define-key map [menu-bar dockerfile-mode] (cons "Dockerfile" menu-map))
     (define-key menu-map [dfc]
       '(menu-item "Comment Region" comment-region
-		  :help "Comment Region"))
+                  :help "Comment Region"))
     (define-key menu-map [dfb]
       '(menu-item "Build" dockerfile-build-buffer
-		  :help "Send the Dockerfile to docker build"))
+                  :help "Send the Dockerfile to docker build"))
     map))
 
-(defvar dockerfile-mode-abbrev-table nil
+(defvar dockerfile-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?# "<" table)
+    (modify-syntax-entry ?\n ">" table)
+    table)
+  "Syntax table for `dockerfile-mode'.")
+
+(define-abbrev-table 'dockerfile-mode-abbrev-table nil
   "Abbrev table used while in `dockerfile-mode'.")
 
 (unless dockerfile-mode-abbrev-table
@@ -80,27 +88,27 @@
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
+;; Handle emacs < 24, which does not have prog-mode
+(defalias 'dockerfile-parent-mode
+  (if (fboundp 'prog-mode) 'prog-mode 'fundamental-mode))
+
 ;;;###autoload
-(defun dockerfile-mode ()
+(define-derived-mode dockerfile-mode dockerfile-parent-mode "Dockerfile"
   "A major mode to edit Dockerfiles.
 \\{dockerfile-mode-map}
 "
-  (interactive)
-  (kill-all-local-variables)
-  (use-local-map dockerfile-mode-map)
-
-  (make-local-variable 'comment-start)
-  (setq comment-start "#")
-  (make-local-variable 'parse-sexp-ignore-comments)
-  (setq parse-sexp-ignore-comments t)
-  (setq local-abbrev-table dockerfile-mode-abbrev-table)
-
-  (make-local-variable	'font-lock-defaults)
-  (setq major-mode 'dockerfile-mode
-	mode-name "dockerfile"
-	font-lock-defaults '(dockerfile-font-lock-keywords nil))
   (set-syntax-table dockerfile-mode-syntax-table)
-  (run-mode-hooks 'dockerfile-mode-hook))
+  (set (make-local-variable 'require-final-newline) t)
+  (set (make-local-variable 'comment-start) "#")
+  (set (make-local-variable 'comment-end) "")
+  (set (make-local-variable 'comment-start-skip) "#+ *")
+  (set (make-local-variable 'parse-sexp-ignore-comments) t)
+  (set (make-local-variable 'font-lock-defaults)
+       '(dockerfile-font-lock-keywords nil t))
+  (setq local-abbrev-table dockerfile-mode-abbrev-table))
+
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 (provide 'dockerfile-mode)
 
+;;; dockerfile-mode.el ends here
