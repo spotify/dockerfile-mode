@@ -36,7 +36,7 @@
   "Runs docker builder command with sudo.")
 
 (defvar dockerfile-font-lock-keywords
-  `(,(cons (rx line-start
+  `(,(cons (rx (or line-start "onbuild ")
                (group (or "from" "maintainer" "run" "cmd" "expose" "env"
                          "add" "entrypoint" "volume" "user" "workdir"))
                word-boundary)
