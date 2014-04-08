@@ -106,6 +106,7 @@
        '(dockerfile-font-lock-keywords nil t))
   (setq local-abbrev-table dockerfile-mode-abbrev-table))
 
+;;;###autoload
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 (provide 'dockerfile-mode)
