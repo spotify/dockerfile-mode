@@ -78,7 +78,7 @@
   "Build an image based upon the buffer"
   (interactive
    (if (null docker-image-name)
-      (list (read-string "image-name:" nil nil))
+      (list (read-string "image-name: " nil nil))
      (list docker-image-name)))
   (save-buffer)
   (if (stringp image-name)
