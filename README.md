@@ -1,5 +1,6 @@
 dockerfile-mode
 ===============
+Known to work with Emacs 24 and later
 
 A Dockerfile mode for emacs
 
