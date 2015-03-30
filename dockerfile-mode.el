@@ -83,7 +83,7 @@
   (save-buffer)
   (if (stringp image-name)
       (shell-command
-       (concat (if dockerfile-use-sudo "sudo " "") "docker build -t " image-name " " (file-name-directory (buffer-file-name)) "&")
+       (concat (if dockerfile-use-sudo "sudo " "") "docker build -t " image-name " -f " (buffer-file-name) " " (file-name-directory (buffer-file-name)) "&")
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
@@ -107,7 +107,7 @@
   (setq local-abbrev-table dockerfile-mode-abbrev-table))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(add-to-list 'auto-mode-alist '("Dockerfile.*\\'" . dockerfile-mode))
 
 (provide 'dockerfile-mode)
 
