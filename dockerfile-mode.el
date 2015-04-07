@@ -97,7 +97,7 @@
 \\{dockerfile-mode-map}
 "
   (set-syntax-table dockerfile-mode-syntax-table)
-  (set (make-local-variable 'require-final-newline) t)
+  (set (make-local-variable 'require-final-newline) mode-require-final-newline)
   (set (make-local-variable 'comment-start) "#")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-start-skip) "#+ *")
