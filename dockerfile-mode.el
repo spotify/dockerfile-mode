@@ -75,6 +75,7 @@
 (unless dockerfile-mode-abbrev-table
   (define-abbrev-table 'dockerfile-mode-abbrev-table ()))
 
+;;;###autoload
 (defun dockerfile-build-buffer (image-name)
   "Build an image based upon the buffer"
   (interactive
