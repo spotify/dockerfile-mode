@@ -65,6 +65,7 @@
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?# "<" table)
     (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?' "\"" table)
     table)
   "Syntax table for `dockerfile-mode'.")
 
