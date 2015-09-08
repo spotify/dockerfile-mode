@@ -50,6 +50,7 @@
   (let ((map (make-sparse-keymap))
         (menu-map (make-sparse-keymap)))
     (define-key map "\C-c\C-b" 'dockerfile-build-buffer)
+    (define-key map "\C-c\M-b" 'dockerfile-build-no-cache-buffer)
     (define-key map "\C-c\C-z" 'dockerfile-test-function)
     (define-key map "\C-c\C-c" 'comment-region)
     (define-key map [menu-bar dockerfile-mode] (cons "Dockerfile" menu-map))
@@ -59,6 +60,9 @@
     (define-key menu-map [dfb]
       '(menu-item "Build" dockerfile-build-buffer
                   :help "Send the Dockerfile to docker build"))
+    (define-key menu-map [dfb]
+      '(menu-item "Build without cache" dockerfile-build-no-cache-buffer
+                  :help "Send the Dockerfile to docker build without cache"))
     map))
 
 (defvar dockerfile-mode-syntax-table
@@ -86,6 +90,20 @@
   (if (stringp image-name)
       (async-shell-command
        (format "%s docker build -t %s -f %s %s" (if dockerfile-use-sudo "sudo" "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
+       "*docker-build-output*")
+    (print "docker-image-name must be a string, consider surrounding it with double quotes")))
+
+;;;###autoload
+(defun dockerfile-build-no-cache-buffer (image-name)
+  "Build an image based upon the buffer without cache"
+  (interactive
+   (if (null docker-image-name)
+      (list (read-string "image-name: " nil nil))
+     (list docker-image-name)))
+  (save-buffer)
+  (if (stringp image-name)
+      (async-shell-command
+       (format "%s docker build --no-cache -t %s -f %s %s" (if dockerfile-use-sudo "sudo" "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
