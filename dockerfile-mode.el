@@ -38,7 +38,8 @@
 (defvar dockerfile-font-lock-keywords
   `(,(cons (rx (or line-start "onbuild ")
                (group (or "from" "maintainer" "run" "cmd" "expose" "env"
-                         "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"))
+                          "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"
+                          "label"))
                word-boundary)
            font-lock-keyword-face)
     ,@(sh-font-lock-keywords)
