@@ -90,7 +90,7 @@
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%s docker build -t %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo" "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
+       (format "%sdocker build -t %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo " "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
