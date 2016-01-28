@@ -39,7 +39,7 @@
   `(,(cons (rx (or line-start "onbuild ")
                (group (or "from" "maintainer" "run" "cmd" "expose" "env" "arg"
                           "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"
-                          "label"))
+                          "label" "stopsignal"))
                word-boundary)
            font-lock-keyword-face)
     ,@(sh-font-lock-keywords)
