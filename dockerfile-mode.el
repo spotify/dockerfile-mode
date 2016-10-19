@@ -19,6 +19,8 @@
 (require 'sh-script)
 (require 'rx)
 
+(declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
+
 (defvar docker-image-name nil)
 
 (defgroup dockerfile nil
@@ -80,6 +82,14 @@
 (unless dockerfile-mode-abbrev-table
   (define-abbrev-table 'dockerfile-mode-abbrev-table ()))
 
+(defun standard-filename (file)
+  "Convert the file name to OS standard.
+If in Cygwin environment, uses Cygwin specific function to convert the
+file name. Otherwise, uses Emacs' standard conversion function."
+  (format "%s" (if (fboundp 'cygwin-convert-file-name-to-windows)
+		   (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
+		 (convert-standard-filename file))))
+
 ;;;###autoload
 (defun dockerfile-build-buffer (image-name)
   "Build an image based upon the buffer"
@@ -90,7 +100,11 @@
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%sdocker build -t %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo " "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
+       (format "%sdocker build -t %s -f \"%s\" \"%s\""
+	       (if dockerfile-use-sudo "sudo " "")
+	       image-name
+	       (standard-filename (buffer-file-name))
+	       (standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
@@ -104,9 +118,13 @@
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%s docker build --no-cache -t %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo" "") image-name (buffer-file-name) (file-name-directory (buffer-file-name)))
+       (format "%s docker build --no-cache -t %s -f \"%s\" \"%s\""
+	       (if dockerfile-use-sudo "sudo" "")
+	       image-name
+	       (standard-filename (buffer-file-name))
+	       (standard-filename (file-name-directory (buffer-file-name)))
        "*docker-build-output*")
-    (print "docker-image-name must be a string, consider surrounding it with double quotes")))
+    (print "docker-image-name must be a string, consider surrounding it with double quotes"))))
 
 ;; Handle emacs < 24, which does not have prog-mode
 (defalias 'dockerfile-parent-mode
