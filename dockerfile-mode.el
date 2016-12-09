@@ -19,6 +19,8 @@
 (require 'sh-script)
 (require 'rx)
 
+(declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
+
 (defvar docker-image-name nil)
 
 (defgroup dockerfile nil
@@ -93,17 +95,30 @@ Each element of the list will be passed as a separate
   (mapconcat (lambda (arg) (concat "--build-arg " "\"" arg "\""))
              dockerfile-build-args " "))
 
+(defun standard-filename (file)
+  "Convert the file name to OS standard.
+If in Cygwin environment, uses Cygwin specific function to convert the
+file name. Otherwise, uses Emacs' standard conversion function."
+  (format "%s" (if (fboundp 'cygwin-convert-file-name-to-windows)
+                   (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
+                 (convert-standard-filename file))))
+
 ;;;###autoload
 (defun dockerfile-build-buffer (image-name)
   "Build an image based upon the buffer"
   (interactive
    (if (null docker-image-name)
-      (list (read-string "image-name: " nil nil))
+       (list (read-string "image-name: " nil nil))
      (list docker-image-name)))
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%sdocker build -t %s %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo " "") image-name (dockerfile-build-arg-string) (buffer-file-name) (file-name-directory (buffer-file-name)))
+       (format "%sdocker build -t %s %s -f \"%s\" \"%s\""
+               (if dockerfile-use-sudo "sudo " "")
+               image-name
+               (dockerfile-build-arg-string)
+               (standard-filename (buffer-file-name))
+               (standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
@@ -112,12 +127,17 @@ Each element of the list will be passed as a separate
   "Build an image based upon the buffer without cache"
   (interactive
    (if (null docker-image-name)
-      (list (read-string "image-name: " nil nil))
+       (list (read-string "image-name: " nil nil))
      (list docker-image-name)))
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%s docker build --no-cache -t %s %s -f \"%s\" \"%s\"" (if dockerfile-use-sudo "sudo" "") image-name (dockerfile-build-arg-string) (buffer-file-name) (file-name-directory (buffer-file-name)))
+       (format "%s docker build --no-cache -t %s %s -f \"%s\" \"%s\""
+               (if dockerfile-use-sudo "sudo" "")
+               image-name
+               (dockerfile-build-arg-string)
+               (standard-filename (buffer-file-name))
+               (standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
