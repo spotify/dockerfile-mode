@@ -49,7 +49,7 @@ Each element of the list will be passed as a separate
   `(,(cons (rx (or line-start "onbuild ")
                (group (or "from" "maintainer" "run" "cmd" "expose" "env" "arg"
                           "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"
-                          "label" "stopsignal"))
+                          "label" "stopsignal" "shell" "healthcheck"))
                word-boundary)
            font-lock-keyword-face)
     ,@(sh-font-lock-keywords)
