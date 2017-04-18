@@ -81,6 +81,7 @@ Each element of the list will be passed as a separate
     (modify-syntax-entry ?# "<" table)
     (modify-syntax-entry ?\n ">" table)
     (modify-syntax-entry ?' "\"" table)
+    (modify-syntax-entry ?= "." table)
     table)
   "Syntax table for `dockerfile-mode'.")
 
