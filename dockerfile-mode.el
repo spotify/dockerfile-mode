@@ -96,7 +96,7 @@ Each element of the list will be passed as a separate
   (mapconcat (lambda (arg) (concat "--build-arg " "\"" arg "\""))
              dockerfile-build-args " "))
 
-(defun standard-filename (file)
+(defun dockerfile-standard-filename (file)
   "Convert the file name to OS standard.
 If in Cygwin environment, uses Cygwin specific function to convert the
 file name. Otherwise, uses Emacs' standard conversion function."
@@ -118,8 +118,8 @@ file name. Otherwise, uses Emacs' standard conversion function."
                (if dockerfile-use-sudo "sudo " "")
                image-name
                (dockerfile-build-arg-string)
-               (standard-filename (buffer-file-name))
-               (standard-filename (file-name-directory (buffer-file-name))))
+               (dockerfile-standard-filename (buffer-file-name))
+               (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
@@ -137,8 +137,8 @@ file name. Otherwise, uses Emacs' standard conversion function."
                (if dockerfile-use-sudo "sudo" "")
                image-name
                (dockerfile-build-arg-string)
-               (standard-filename (buffer-file-name))
-               (standard-filename (file-name-directory (buffer-file-name))))
+               (dockerfile-standard-filename (buffer-file-name))
+               (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
