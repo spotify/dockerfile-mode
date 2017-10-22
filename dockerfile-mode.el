@@ -1,6 +1,7 @@
 ;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles
 
 ;; Copyright (c) 2013 Spotify AB
+;; Package-Requires: ((emacs "24"))
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
 ;; use this file except in compliance with the License. You may obtain a copy of
@@ -142,12 +143,8 @@ file name. Otherwise, uses Emacs' standard conversion function."
        "*docker-build-output*")
     (print "docker-image-name must be a string, consider surrounding it with double quotes")))
 
-;; Handle emacs < 24, which does not have prog-mode
-(defalias 'dockerfile-parent-mode
-  (if (fboundp 'prog-mode) 'prog-mode 'fundamental-mode))
-
 ;;;###autoload
-(define-derived-mode dockerfile-mode dockerfile-parent-mode "Dockerfile"
+(define-derived-mode dockerfile-mode prog-mode "Dockerfile"
   "A major mode to edit Dockerfiles.
 \\{dockerfile-mode-map}
 "
