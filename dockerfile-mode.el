@@ -1,7 +1,7 @@
 ;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles
 
 ;; Copyright (c) 2013 Spotify AB
-;; Package-Requires: ((emacs "24"))
+;; Package-Requires: ((emacs "24") (s "1.12"))
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
 ;; use this file except in compliance with the License. You may obtain a copy of
@@ -19,6 +19,8 @@
 
 (require 'sh-script)
 (require 'rx)
+(require 's)
+
 
 (declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
 
