@@ -92,7 +92,7 @@ Each element of the list will be passed as a separate
 
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
-  (mapconcat (lambda (arg) (concat "--build-arg " "\"" arg "\""))
+  (mapconcat (lambda (arg) (concat "--build-arg " (shell-quote-argument arg)))
              dockerfile-build-args " "))
 
 (defun dockerfile-standard-filename (file)
@@ -117,18 +117,21 @@ This can be set in file or directory-local variables.")
 
 
 ;;;###autoload
-(defun dockerfile-build-buffer (image-name)
-  "Build an image called IMAGE-NAME based upon the buffer."
-  (interactive (list (dockerfile-read-image-name)))
+(defun dockerfile-build-buffer (image-name &optional no-cache)
+  "Build an image called IMAGE-NAME based upon the buffer.
+If prefix arg NO-CACHE is set, don't cache the image."
+  (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
-       (format "%sdocker build -t %s %s -f \"%s\" \"%s\""
-               (if dockerfile-use-sudo "sudo " "")
-               image-name
-               (dockerfile-build-arg-string)
-               (dockerfile-standard-filename (buffer-file-name))
-               (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
+       (format
+        "%sdocker build %s -t %s %s -f %s %s"
+        (if dockerfile-use-sudo "sudo " "")
+        (if no-cache "--no-cache" "")
+        (shell-quote-argument image-name)
+        (dockerfile-build-arg-string)
+        (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
+        (shell-quote-argument (dockerfile-standard-filename (file-name-directory (buffer-file-name)))))
        "*docker-build-output*")
     (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
 
@@ -136,17 +139,7 @@ This can be set in file or directory-local variables.")
 (defun dockerfile-build-no-cache-buffer (image-name)
   "Build an image called IMAGE-NAME based upon the buffer without cache."
   (interactive (list (dockerfile-read-image-name)))
-  (save-buffer)
-  (if (stringp image-name)
-      (async-shell-command
-       (format "%s docker build --no-cache -t %s %s -f \"%s\" \"%s\""
-               (if dockerfile-use-sudo "sudo" "")
-               image-name
-               (dockerfile-build-arg-string)
-               (dockerfile-standard-filename (buffer-file-name))
-               (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
-       "*docker-build-output*")
-    (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
+  (dockerfile-build-buffer image-name t))
 
 ;;;###autoload
 (define-derived-mode dockerfile-mode prog-mode "Dockerfile"
