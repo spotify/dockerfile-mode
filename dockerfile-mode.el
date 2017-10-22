@@ -131,7 +131,7 @@ If prefix arg NO-CACHE is set, don't cache the image."
         (shell-quote-argument image-name)
         (dockerfile-build-arg-string)
         (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
-        (shell-quote-argument (dockerfile-standard-filename (file-name-directory (buffer-file-name)))))
+        (shell-quote-argument (dockerfile-standard-filename default-directory)))
        (format "*docker-build-output: %s *" image-name))
     (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
 
