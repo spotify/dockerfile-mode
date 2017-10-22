@@ -22,8 +22,6 @@
 
 (declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
 
-(defvar docker-image-name nil)
-
 (defgroup dockerfile nil
   "dockerfile code editing commands for Emacs."
   :link '(custom-group-link :tag "Font Lock Faces group" font-lock-faces)
@@ -105,13 +103,23 @@ file name. Otherwise, uses Emacs' standard conversion function."
                    (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
                  (convert-standard-filename file))))
 
+(defvar dockerfile-image-name nil
+  "Name of the dockerfile currently being used.
+This can be set in file or directory-local variables.")
+(define-obsolete-variable-alias 'docker-image-name 'dockerfile-image-name)
+
+(defvar dockerfile-image-name-history nil
+  "History of image names read by `dockerfile-read-image-name'.")
+
+(defun dockerfile-read-image-name ()
+  "Read a docker image name."
+  (read-string "Image name: " dockerfile-image-name 'dockerfile-image-name-history))
+
+
 ;;;###autoload
 (defun dockerfile-build-buffer (image-name)
-  "Build an image based upon the buffer"
-  (interactive
-   (if (null docker-image-name)
-       (list (read-string "image-name: " nil nil))
-     (list docker-image-name)))
+  "Build an image called IMAGE-NAME based upon the buffer."
+  (interactive (list (dockerfile-read-image-name)))
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
@@ -122,15 +130,12 @@ file name. Otherwise, uses Emacs' standard conversion function."
                (dockerfile-standard-filename (buffer-file-name))
                (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
-    (print "docker-image-name must be a string, consider surrounding it with double quotes")))
+    (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
 
 ;;;###autoload
 (defun dockerfile-build-no-cache-buffer (image-name)
-  "Build an image based upon the buffer without cache"
-  (interactive
-   (if (null docker-image-name)
-       (list (read-string "image-name: " nil nil))
-     (list docker-image-name)))
+  "Build an image called IMAGE-NAME based upon the buffer without cache."
+  (interactive (list (dockerfile-read-image-name)))
   (save-buffer)
   (if (stringp image-name)
       (async-shell-command
@@ -141,7 +146,7 @@ file name. Otherwise, uses Emacs' standard conversion function."
                (dockerfile-standard-filename (buffer-file-name))
                (dockerfile-standard-filename (file-name-directory (buffer-file-name))))
        "*docker-build-output*")
-    (print "docker-image-name must be a string, consider surrounding it with double quotes")))
+    (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
 
 ;;;###autoload
 (define-derived-mode dockerfile-mode prog-mode "Dockerfile"
