@@ -2,6 +2,7 @@
 
 ;; Copyright (c) 2013 Spotify AB
 ;; Package-Requires: ((emacs "24") (s "1.12"))
+;; Homepage: https://github.com/spotify/dockerfile-mode
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
 ;; use this file except in compliance with the License. You may obtain a copy of
@@ -14,6 +15,12 @@
 ;; WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 ;; License for the specific language governing permissions and limitations under
 ;; the License.
+
+;;; Commentary:
+
+;; Provides a major mode `dockerfile-mode' for use with the standard
+;; `Dockerfile' file format.  Additional convenience functions allow
+;; images to be built easily.
 
 ;;; Code:
 
