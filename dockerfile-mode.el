@@ -1,4 +1,4 @@
-;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles
+;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2013 Spotify AB
 ;; Package-Requires: ((emacs "24") (s "1.12"))
@@ -132,7 +132,7 @@ If prefix arg NO-CACHE is set, don't cache the image."
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
   (if (stringp image-name)
-      (async-shell-command
+      (compilation-start
        (format
         "%sdocker build %s -t %s %s -f %s %s"
         (if dockerfile-use-sudo "sudo " "")
@@ -141,7 +141,8 @@ If prefix arg NO-CACHE is set, don't cache the image."
         (dockerfile-build-arg-string)
         (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
         (shell-quote-argument (dockerfile-standard-filename default-directory)))
-       (format "*docker-build-output: %s *" image-name))
+       nil
+       (lambda (_) (format "*docker-build-output: %s *" image-name)))
     (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
 
 ;;;###autoload
