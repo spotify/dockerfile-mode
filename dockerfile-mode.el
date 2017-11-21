@@ -109,7 +109,7 @@ Each element of the list will be passed as a separate
 (defun dockerfile-standard-filename (file)
   "Convert the FILE name to OS standard.
 If in Cygwin environment, uses Cygwin specific function to convert the
-file name. Otherwise, uses Emacs' standard conversion function."
+file name.  Otherwise, uses Emacs' standard conversion function."
   (if (fboundp 'cygwin-convert-file-name-to-windows)
       (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
     (convert-standard-filename file)))
