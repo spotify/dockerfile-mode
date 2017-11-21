@@ -43,7 +43,9 @@
   :group 'dockerfile)
 
 (defcustom dockerfile-use-sudo nil
-  "Runs docker builder command with sudo.")
+  "Runs docker builder command with sudo."
+  :type 'boolean
+  :group 'dockerfile)
 
 (defcustom dockerfile-build-args nil
   "List of --build-arg to pass to docker build.
