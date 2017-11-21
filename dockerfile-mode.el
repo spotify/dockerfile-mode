@@ -107,7 +107,7 @@ Each element of the list will be passed as a separate
              dockerfile-build-args " "))
 
 (defun dockerfile-standard-filename (file)
-  "Convert the file name to OS standard.
+  "Convert the FILE name to OS standard.
 If in Cygwin environment, uses Cygwin specific function to convert the
 file name. Otherwise, uses Emacs' standard conversion function."
   (if (fboundp 'cygwin-convert-file-name-to-windows)
