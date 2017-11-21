@@ -65,7 +65,7 @@ Each element of the list will be passed as a separate
     ,@(sh-font-lock-keywords)
     ,@(sh-font-lock-keywords-2)
     ,@(sh-font-lock-keywords-1))
-  "Default font-lock-keywords for `dockerfile mode'.")
+  "Default `font-lock-keywords' for `dockerfile mode'.")
 
 (defvar dockerfile-mode-map
   (let ((map (make-sparse-keymap))
