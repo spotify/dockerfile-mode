@@ -2,6 +2,8 @@ dockerfile-mode
 ===============
 Known to work with Emacs 24 and later
 
+If you just want to use it, you can get it via MELPA.
+
 A Dockerfile mode for emacs
 
 ``` emacs-lisp
