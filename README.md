@@ -23,3 +23,8 @@ at the top of your Dockerfile.
 ```
 
 If you don't, you'll be prompted for an image name each time you build.
+You may want to add the following to your emacs config:
+
+``` emacs-lisp
+(put 'dockerfile-image-name 'safe-local-variable #'stringp)
+```
