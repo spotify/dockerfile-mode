@@ -55,6 +55,14 @@ Each element of the list will be passed as a separate
   :type '(repeat string)
   :group 'dockerfile)
 
+(defface dockerfile-image-name
+  '((t (:inherit (font-lock-type-face bold))))
+  "Face to highlight the base image name after FROM instruction.")
+
+(defface dockerfile-image-alias
+  '((t (:inherit (font-lock-constant-face bold))))
+  "Face to highlight the base image alias inf FROM ... AS <alias> construct.")
+
 (defvar dockerfile-font-lock-keywords
   `(,(cons (rx (or line-start "onbuild ")
                (group (or "from" "maintainer" "run" "cmd" "expose" "env" "arg"
@@ -62,6 +70,9 @@ Each element of the list will be passed as a separate
                           "label" "stopsignal" "shell" "healthcheck"))
                word-boundary)
            font-lock-keyword-face)
+    (,(rx "FROM " (group (+? nonl)) (or " " eol) (? "as " (group (1+ nonl))))
+     (1 'dockerfile-image-name)
+     (2 'dockerfile-image-alias nil t))
     ,@(sh-font-lock-keywords)
     ,@(sh-font-lock-keywords-2)
     ,@(sh-font-lock-keywords-1))
