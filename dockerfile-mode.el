@@ -112,6 +112,21 @@ Each element of the list will be passed as a separate
 (unless dockerfile-mode-abbrev-table
   (define-abbrev-table 'dockerfile-mode-abbrev-table ()))
 
+(defun dockerfile-indent-line-function ()
+  "Indent lines in a Dockerfile.
+
+Lines beginning with a keyword are ignored, and any others are
+indented by one `tab-width'."
+  (unless (eq (get-text-property (point-at-bol) 'face)
+              'font-lock-keyword-face)
+    (save-excursion
+      (beginning-of-line)
+      (skip-chars-forward "[ \t]" (point-at-eol))
+      (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
+        ;; Delete existing whitespace.
+        (delete-char (- (point-at-bol) (point)))
+        (indent-to tab-width)))))
+
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
   (mapconcat (lambda (arg) (concat "--build-arg " (shell-quote-argument arg)))
@@ -177,7 +192,8 @@ If prefix arg NO-CACHE is set, don't cache the image."
   (set (make-local-variable 'parse-sexp-ignore-comments) t)
   (set (make-local-variable 'font-lock-defaults)
        '(dockerfile-font-lock-keywords nil t))
-  (setq local-abbrev-table dockerfile-mode-abbrev-table))
+  (setq local-abbrev-table dockerfile-mode-abbrev-table)
+  (setq indent-line-function #'dockerfile-indent-line-function))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("Dockerfile\\(?:\\..*\\)?\\'" . dockerfile-mode))
