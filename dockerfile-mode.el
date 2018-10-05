@@ -120,8 +120,8 @@ Each element of the list will be passed as a separate
 
 Lines beginning with a keyword are ignored, and any others are
 indented by one `tab-width'."
-  (unless (eq (get-text-property (point-at-bol) 'face)
-              'font-lock-keyword-face)
+  (unless (member (get-text-property (point-at-bol) 'face)
+                  '(font-lock-comment-delimiter-face font-lock-keyword-face))
     (save-excursion
       (beginning-of-line)
       (skip-chars-forward "[ \t]" (point-at-eol))
