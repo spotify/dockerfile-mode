@@ -212,7 +212,7 @@ returned, otherwise the base image name is used."
   (set (make-local-variable 'font-lock-defaults)
        '(dockerfile-font-lock-keywords nil t))
   (setq local-abbrev-table dockerfile-mode-abbrev-table)
-  (setq indent-line-function #'dockerfile-indent-line-function))
+  (set (make-local-variable 'indent-line-function) #'dockerfile-indent-line-function))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("Dockerfile\\(?:\\..*\\)?\\'" . dockerfile-mode))
