@@ -135,13 +135,20 @@ indented by one `tab-width'."
   (mapconcat (lambda (arg) (concat "--build-arg " (shell-quote-argument arg)))
              dockerfile-build-args " "))
 
+(defun dockerfile-untrampify (file)
+  "Remove tramp syntax if present to be consumed on remote systems"
+  (if (tramp-tramp-file-p file)
+      (tramp-file-name-localname (tramp-dissect-file-name file))
+    file))
+
 (defun dockerfile-standard-filename (file)
   "Convert the FILE name to OS standard.
 If in Cygwin environment, uses Cygwin specific function to convert the
 file name.  Otherwise, uses Emacs' standard conversion function."
-  (if (fboundp 'cygwin-convert-file-name-to-windows)
-      (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
-    (convert-standard-filename file)))
+  (let ((local-file (dockerfile-untrampify file)))
+    (if (fboundp 'cygwin-convert-file-name-to-windows)
+        (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows local-file))
+      (convert-standard-filename local-file))))
 
 (defvar dockerfile-image-name nil
   "Name of the dockerfile currently being used.
