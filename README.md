@@ -28,3 +28,8 @@ You may want to add the following to your emacs config:
 ``` emacs-lisp
 (put 'dockerfile-image-name 'safe-local-variable #'stringp)
 ```
+
+You can change the binary to use with
+```emacs-lisp
+(setq dockerfile-mode-command "docker")
+```
