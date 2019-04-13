@@ -42,6 +42,11 @@
   :type 'hook
   :group 'dockerfile)
 
+(defcustom dockerfile-mode-command "docker"
+  "Which binary to use to build images"
+  :group 'dockerfile
+  :type 'string)
+
 (defcustom dockerfile-use-sudo nil
   "Runs docker builder command with sudo."
   :type 'boolean
@@ -165,8 +170,9 @@ If prefix arg NO-CACHE is set, don't cache the image."
   (if (stringp image-name)
       (compilation-start
        (format
-        "%sdocker build %s -t %s %s -f %s %s"
+        "%s%s build %s -t %s %s -f %s %s"
         (if dockerfile-use-sudo "sudo " "")
+	dockerfile-mode-command
         (if no-cache "--no-cache" "")
         (shell-quote-argument image-name)
         (dockerfile-build-arg-string)
