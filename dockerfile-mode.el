@@ -89,10 +89,9 @@ Each element of the list will be passed as a separate
 (defvar dockerfile-mode-map
   (let ((map (make-sparse-keymap))
         (menu-map (make-sparse-keymap)))
-    (define-key map "\C-c\C-b" 'dockerfile-build-buffer)
-    (define-key map "\C-c\M-b" 'dockerfile-build-no-cache-buffer)
-    (define-key map "\C-c\C-z" 'dockerfile-test-function)
-    (define-key map "\C-c\C-c" 'comment-region)
+    (define-key map "\C-c\C-b" #'dockerfile-build-buffer)
+    (define-key map "\C-c\M-b" #'dockerfile-build-no-cache-buffer)
+    (define-key map "\C-c\C-c" #'comment-region)
     (define-key map [menu-bar dockerfile-mode] (cons "Dockerfile" menu-map))
     (define-key menu-map [dfc]
       '(menu-item "Comment Region" comment-region
