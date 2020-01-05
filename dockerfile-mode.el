@@ -171,20 +171,18 @@ This can be set in file or directory-local variables.")
 If prefix arg NO-CACHE is set, don't cache the image."
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
-  (if (stringp image-name)
-      (compilation-start
-       (format
-        "%s%s build %s %s %s -f %s %s"
-        (if dockerfile-use-sudo "sudo " "")
-	dockerfile-mode-command
-        (if no-cache "--no-cache" "")
-        (dockerfile-tag-string image-name)
-        (dockerfile-build-arg-string)
-        (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
-        (shell-quote-argument (dockerfile-standard-filename default-directory)))
-       nil
-       (lambda (_) (format "*docker-build-output: %s *" image-name)))
-    (print "dockerfile-image-name must be a string, consider surrounding it with double quotes")))
+    (compilation-start
+        (format
+            "%s%s build %s %s %s -f %s %s"
+            (if dockerfile-use-sudo "sudo " "")
+            dockerfile-mode-command
+            (if no-cache "--no-cache" "")
+            (dockerfile-tag-string image-name)
+            (dockerfile-build-arg-string)
+            (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
+            (shell-quote-argument (dockerfile-standard-filename default-directory)))
+    nil
+    (lambda (_) (format "*docker-build-output: %s *" image-name))))
 
 ;;;###autoload
 (defun dockerfile-build-no-cache-buffer (image-name)
