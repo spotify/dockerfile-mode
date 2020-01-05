@@ -148,6 +148,10 @@ file name.  Otherwise, uses Emacs' standard conversion function."
       (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
     (convert-standard-filename file)))
 
+(defun dockerfile-tag-string (image-name)
+  "Return a --tag shell-quoted IMAGE-NAME string or an empty string if image-name is blank."
+    (if (string= image-name "") "" (format "--tag %s " (shell-quote-argument image-name))))
+
 (defvar dockerfile-image-name nil
   "Name of the dockerfile currently being used.
 This can be set in file or directory-local variables.")
@@ -170,11 +174,11 @@ If prefix arg NO-CACHE is set, don't cache the image."
   (if (stringp image-name)
       (compilation-start
        (format
-        "%s%s build %s -t %s %s -f %s %s"
+        "%s%s build %s %s %s -f %s %s"
         (if dockerfile-use-sudo "sudo " "")
 	dockerfile-mode-command
         (if no-cache "--no-cache" "")
-        (shell-quote-argument image-name)
+        (dockerfile-tag-string image-name)
         (dockerfile-build-arg-string)
         (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
         (shell-quote-argument (dockerfile-standard-filename default-directory)))
