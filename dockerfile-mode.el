@@ -168,7 +168,11 @@ This can be set in file or directory-local variables.")
 ;;;###autoload
 (defun dockerfile-build-buffer (image-name &optional no-cache)
   "Build an image called IMAGE-NAME based upon the buffer.
-If prefix arg NO-CACHE is set, don't cache the image."
+
+If prefix arg NO-CACHE is set, don't cache the image.
+The build string will be of the format:
+`sudo docker build --no-cache --tag IMAGE-NAME --build-args arg1.. -f filename directory`"
+
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
     (compilation-start
