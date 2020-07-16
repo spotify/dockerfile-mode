@@ -59,6 +59,15 @@ Each element of the list will be passed as a separate
   :type '(repeat string)
   :group 'dockerfile)
 
+(defcustom dockerfile-use-buildkit nil
+  "If t use Docker buildkit for building images
+
+This is the new buildsystem for docker, and in time it will replace the old one
+but for now it has to be explicitly enabled to work.
+It is supported from docker 18.09"
+  :type 'boolean
+  :group 'dockerfile)
+
 (defface dockerfile-image-name
   '((t (:inherit (font-lock-type-face bold))))
   "Face to highlight the base image name after FROM instruction.")
@@ -176,7 +185,8 @@ The build string will be of the format:
   (save-buffer)
     (compilation-start
         (format
-            "%s%s build %s %s %s -f %s %s"
+            "%s%s%s build %s %s %s -f %s %s"
+            (if dockerfile-use-buildkit "DOCKER_BUILDKIT=1 " "")
             (if dockerfile-use-sudo "sudo " "")
             dockerfile-mode-command
             (if no-cache "--no-cache" "")
