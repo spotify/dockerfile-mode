@@ -60,7 +60,7 @@ Each element of the list will be passed as a separate
   :type '(repeat string)
   :group 'dockerfile)
 
-(defcustom dockerfile-indent-offset (and standard-indent 2)
+(defcustom dockerfile-indent-offset (or standard-indent 2)
   "Dockerfile number of columns for margin-changing functions to indent."
   :type 'integer
   :safe #'integerp
