@@ -1,7 +1,7 @@
 ;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2013 Spotify AB
-;; Package-Requires: ((emacs "24") (s "1.12"))
+;; Package-Requires: ((emacs "24"))
 ;; Homepage: https://github.com/spotify/dockerfile-mode
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +26,6 @@
 
 (require 'sh-script)
 (require 'rx)
-(require 's)
 
 
 (declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
@@ -144,7 +143,8 @@ indented by one `tab-width'."
 If in Cygwin environment, uses Cygwin specific function to convert the
 file name.  Otherwise, uses Emacs' standard conversion function."
   (if (fboundp 'cygwin-convert-file-name-to-windows)
-      (s-replace "\\" "\\\\" (cygwin-convert-file-name-to-windows file))
+      (replace-regexp-in-string
+       (rx "\\") "\\\\" (cygwin-convert-file-name-to-windows file) t t)
     (convert-standard-filename file)))
 
 (defun dockerfile-tag-string (image-name)
