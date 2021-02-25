@@ -165,10 +165,11 @@ file name.  Otherwise, uses Emacs' standard conversion function."
   "Return a --tag shell-quoted IMAGE-NAME string or an empty string if image-name is blank."
     (if (string= image-name "") "" (format "--tag %s " (shell-quote-argument image-name))))
 
+(define-obsolete-variable-alias 'docker-image-name 'dockerfile-image-name "2017-10-22")
+
 (defvar dockerfile-image-name nil
   "Name of the dockerfile currently being used.
 This can be set in file or directory-local variables.")
-(define-obsolete-variable-alias 'docker-image-name 'dockerfile-image-name "2017-10-22")
 
 (defvar dockerfile-image-name-history nil
   "History of image names read by `dockerfile-read-image-name'.")
