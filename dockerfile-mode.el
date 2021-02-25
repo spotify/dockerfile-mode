@@ -42,7 +42,7 @@
   :group 'dockerfile)
 
 (defcustom dockerfile-mode-command "docker"
-  "Which binary to use to build images"
+  "Which binary to use to build images."
   :group 'dockerfile
   :type 'string)
 
@@ -60,7 +60,7 @@ Each element of the list will be passed as a separate
   :group 'dockerfile)
 
 (defcustom dockerfile-use-buildkit nil
-  "If t use Docker buildkit for building images
+  "Use Docker buildkit for building images?
 
 This is the new buildsystem for docker, and in time it will replace the old one
 but for now it has to be explicitly enabled to work.
