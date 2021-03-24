@@ -198,8 +198,12 @@ The build string will be of the format:
             (if no-cache "--no-cache" "")
             (dockerfile-tag-string image-name)
             (dockerfile-build-arg-string)
-            (shell-quote-argument (dockerfile-standard-filename (buffer-file-name)))
-            (shell-quote-argument (dockerfile-standard-filename default-directory)))
+            (shell-quote-argument (dockerfile-standard-filename
+				   (or (file-remote-p (buffer-file-name) 'localname)
+				       (buffer-file-name))))
+            (shell-quote-argument (dockerfile-standard-filename
+				   (or (file-remote-p default-directory 'localname)
+				       default-directory))))
     nil
     (lambda (_) (format "*docker-build-output: %s *" image-name))))
 
