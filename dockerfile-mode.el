@@ -36,11 +36,6 @@
   :prefix "dockerfile-"
   :group 'languages)
 
-(defcustom dockerfile-mode-hook nil
-  "*Hook called by `dockerfile-mode'."
-  :type 'hook
-  :group 'dockerfile)
-
 (defcustom dockerfile-mode-command "docker"
   "Which binary to use to build images."
   :group 'dockerfile
