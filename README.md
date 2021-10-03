@@ -19,14 +19,14 @@ You can specify the image name in the file itself by adding a line like this
 at the top of your Dockerfile.
 
 ``` emacs-lisp
-## -*- docker-image-name: "your-image-name-here" -*-
+## -*- dockerfile-image-name: "your-image-name-here" -*-
 ```
 
 If you don't, you'll be prompted for an image name each time you build.
 You may want to add the following to your emacs config:
 
 ``` emacs-lisp
-(put 'docker-image-name 'safe-local-variable #'stringp)
+(put 'dockerfile-image-name 'safe-local-variable #'stringp)
 ```
 
 You can change the binary to use with
