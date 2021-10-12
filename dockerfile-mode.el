@@ -65,6 +65,10 @@ but for now it has to be explicitly enabled to work.
 It is supported from docker 18.09"
   :type 'boolean)
 
+(defcustom dockerfile-enable-auto-indent t
+  "Toggles the auto indentation functionality."
+  :type 'boolean)
+
 (defcustom dockerfile-indent-offset (or standard-indent 2)
   "Dockerfile number of columns for margin-changing functions to indent."
   :type 'integer
@@ -134,16 +138,18 @@ It is supported from docker 18.09"
   "Indent lines in a Dockerfile.
 
 Lines beginning with a keyword are ignored, and any others are
-indented by one `dockerfile-indent-offset'."
-  (unless (member (get-text-property (point-at-bol) 'face)
-                  '(font-lock-comment-delimiter-face font-lock-keyword-face))
-    (save-excursion
-      (beginning-of-line)
-      (skip-chars-forward "[ \t]" (point-at-eol))
-      (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
-        ;; Delete existing whitespace.
-        (delete-char (- (point-at-bol) (point)))
-        (indent-to dockerfile-indent-offset)))))
+indented by one `dockerfile-indent-offset'. Functionality toggled
+by `dockerfile-enable-auto-indent'."
+  (when dockerfile-enable-auto-indent
+    (unless (member (get-text-property (point-at-bol) 'face)
+             '(font-lock-comment-delimiter-face font-lock-keyword-face))
+     (save-excursion
+       (beginning-of-line)
+       (skip-chars-forward "[ \t]" (point-at-eol))
+       (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
+         ;; Delete existing whitespace.
+         (delete-char (- (point-at-bol) (point)))
+         (indent-to dockerfile-indent-offset))))))
 
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
