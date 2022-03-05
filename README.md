@@ -13,7 +13,7 @@ A Dockerfile mode for emacs
 ```
 
 Adds syntax highlighting as well as the ability to build the image
-directly (C-c C-b) from the buffer.
+directly using `C-c C-b` from the buffer (`C-c M-b` to bypass docker build cache).
 
 You can specify the image name in the file itself by adding a line like this
 at the top of your Dockerfile.
