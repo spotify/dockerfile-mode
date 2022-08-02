@@ -4,7 +4,7 @@
 ;; Package-Requires: ((emacs "24"))
 ;; Homepage: https://github.com/spotify/dockerfile-mode
 ;; URL: https://github.com/spotify/dockerfile-mode
-;; Version: 1.5
+;; Version: 1.7
 ;; Keywords: docker
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -66,6 +66,11 @@ Each element of the list will be passed as a separate
  --build-arg to the docker build command."
   :type '(repeat string)
   :group 'dockerfile)
+
+(defcustom dockerfile-build-progress "auto"
+  "Type of --progress output (auto, plain, tty) of docker build."
+  :group 'dockerfile
+  :type 'string)
 
 (defcustom dockerfile-use-buildkit nil
   "Use Docker buildkit for building images?
@@ -199,13 +204,13 @@ This can be set in file or directory-local variables.")
 
 If prefix arg NO-CACHE is set, don't cache the image.
 The build string will be of the format:
-`sudo docker build --no-cache --tag IMAGE-NAME --build-args arg1.. -f filename directory`"
+`sudo docker build --no-cache --force-rm --pull --force-rm --tag IMAGE-NAME --build-args arg1.. -f filename directory`"
 
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
     (compilation-start
         (format
-            "%s%s%s build %s %s %s %s %s -f %s %s"
+            "%s%s%s build %s %s %s %s %s --progress %s -f %s %s"
             (if dockerfile-use-buildkit "DOCKER_BUILDKIT=1 " "")
             (if dockerfile-use-sudo "sudo " "")
             dockerfile-mode-command
@@ -214,6 +219,7 @@ The build string will be of the format:
             (if dockerfile-build-pull "--pull " "")
             (dockerfile-tag-string image-name)
             (dockerfile-build-arg-string)
+            dockerfile-build-progress
             (shell-quote-argument (dockerfile-standard-filename
 				   (or (file-remote-p (buffer-file-name) 'localname)
 				       (buffer-file-name))))
