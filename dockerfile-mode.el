@@ -204,7 +204,7 @@ This can be set in file or directory-local variables.")
 
 If prefix arg NO-CACHE is set, don't cache the image.
 The build string will be of the format:
-`sudo docker build --no-cache --force-rm --pull --force-rm --tag IMAGE-NAME --build-args arg1.. --progress PROGRESS_TYPE -f filename directory`"
+`sudo docker build --no-cache --force-rm --pull --tag IMAGE-NAME --build-args arg1.. --progress PROGRESS_TYPE -f filename directory`"
 
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
