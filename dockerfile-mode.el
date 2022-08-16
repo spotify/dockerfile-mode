@@ -268,8 +268,11 @@ returned, otherwise the base image name is used."
   (set (make-local-variable 'indent-line-function) #'dockerfile-indent-line-function))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("/Dockerfile\\(?:\\.[^/\\]*\\)?\\'" .
-                                dockerfile-mode))
+(add-to-list 'auto-mode-alist
+             (cons (concat "[/\\]"
+                           "\\(?:Containerfile\\|Dockerfile\\)"
+                           "\\(?:\\.[^/\\]*\\)?\\'")
+                   'dockerfile-mode))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-mode))
