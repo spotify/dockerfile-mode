@@ -5,7 +5,7 @@
 ;; Homepage: https://github.com/spotify/dockerfile-mode
 ;; URL: https://github.com/spotify/dockerfile-mode
 ;; Version: 1.7
-;; Keywords: docker
+;; Keywords: docker languages processes tools
 ;;
 ;; Licensed under the Apache License, Version 2.0 (the "License"); you may not
 ;; use this file except in compliance with the License. You may obtain a copy of
@@ -34,7 +34,7 @@
 (declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
 
 (defgroup dockerfile nil
-  "dockerfile code editing commands for Emacs."
+  "Dockerfile editing commands for Emacs."
   :link '(custom-group-link :tag "Font Lock Faces group" font-lock-faces)
   :prefix "dockerfile-"
   :group 'languages)
@@ -181,7 +181,9 @@ file name.  Otherwise, uses Emacs' standard conversion function."
     (convert-standard-filename file)))
 
 (defun dockerfile-tag-string (image-name)
-  "Return a --tag shell-quoted IMAGE-NAME string or an empty string if image-name is blank."
+  "Return a --tag shell-quoted IMAGE-NAME string.
+
+Returns an empty string if IMAGE-NAME is blank."
     (if (string= image-name "") "" (format "--tag %s " (shell-quote-argument image-name))))
 
 (define-obsolete-variable-alias 'docker-image-name 'dockerfile-image-name "2017-10-22")
@@ -203,8 +205,18 @@ This can be set in file or directory-local variables.")
   "Build an image called IMAGE-NAME based upon the buffer.
 
 If prefix arg NO-CACHE is set, don't cache the image.
+
 The build string will be of the format:
-`sudo docker build --no-cache --force-rm --pull --tag IMAGE-NAME --build-args arg1.. --progress PROGRESS_TYPE -f filename directory`"
+
+    sudo docker build
+      --no-cache
+      --force-rm
+      --pull
+      --tag IMAGE-NAME
+      --build-args arg1..
+      --progress PROGRESS_TYPE
+      -f filename
+      directory`"
 
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
@@ -252,8 +264,7 @@ returned, otherwise the base image name is used."
 ;;;###autoload
 (define-derived-mode dockerfile-mode prog-mode "Dockerfile"
   "A major mode to edit Dockerfiles.
-\\{dockerfile-mode-map}
-"
+\\{dockerfile-mode-map}"
   (set-syntax-table dockerfile-mode-syntax-table)
   (set (make-local-variable 'imenu-generic-expression)
        `(("Stage" dockerfile--imenu-function 1)))
