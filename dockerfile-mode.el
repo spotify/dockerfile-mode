@@ -204,19 +204,19 @@ This can be set in file or directory-local variables.")
 (defun dockerfile-build-buffer (image-name &optional no-cache)
   "Build an image called IMAGE-NAME based upon the buffer.
 
-If prefix arg NO-CACHE is set, don't cache the image.
+If the prefix arg NO-CACHE is set, don't cache the image.
 
-The build string will be of the format:
+The shell command used to build the image is:
 
-    sudo docker build
-      --no-cache
-      --force-rm
-      --pull
-      --tag IMAGE-NAME
-      --build-args arg1..
-      --progress PROGRESS_TYPE
-      -f filename
-      directory`"
+    sudo docker build    \\
+      --no-cache         \\
+      --force-rm         \\
+      --pull             \\
+      --tag IMAGE-NAME   \\
+      --build-args args  \\
+      --progress type    \\
+      -f filename        \\
+      directory"
 
   (interactive (list (dockerfile-read-image-name) prefix-arg))
   (save-buffer)
