@@ -156,7 +156,7 @@ Lines beginning with a keyword are ignored, and any others are
 indented by one `dockerfile-indent-offset'. Functionality toggled
 by `dockerfile-enable-auto-indent'."
   (when dockerfile-enable-auto-indent
-    (unless (member (get-text-property (point-at-bol) 'face)
+    (unless (member (get-text-property (line-beginning-position) 'face)
              '(font-lock-comment-delimiter-face font-lock-keyword-face))
      (save-excursion
        (beginning-of-line)
