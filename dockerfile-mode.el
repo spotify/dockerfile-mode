@@ -165,7 +165,7 @@ by `dockerfile-enable-auto-indent'."
 
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
-  (mapconcat (lambda (arg) (concat "--build-arg " (shell-quote-argument arg)))
+  (mapconcat (lambda (arg) (concat "--build-arg=" (shell-quote-argument arg)))
              dockerfile-build-args " "))
 
 (defun dockerfile-standard-filename (file)
