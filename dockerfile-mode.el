@@ -162,9 +162,7 @@ by `dockerfile-enable-auto-indent'."
        (beginning-of-line)
        (skip-chars-forward "[ \t]" (point-at-eol))
        (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
-         ;; Delete existing whitespace.
-         (delete-char (- (point-at-bol) (point)))
-         (indent-to dockerfile-indent-offset))))))
+         (indent-line-to dockerfile-indent-offset))))))
 
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
