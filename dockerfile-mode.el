@@ -160,8 +160,7 @@ by `dockerfile-enable-auto-indent'."
              '(font-lock-comment-delimiter-face font-lock-keyword-face))
      (save-excursion
        (beginning-of-line)
-       (skip-chars-forward "[ \t]" (point-at-eol))
-       (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
+       (unless (looking-at-p "\\s-*$") ; Ignore empty lines.
          (indent-line-to dockerfile-indent-offset))))))
 
 (defun dockerfile-build-arg-string ()
