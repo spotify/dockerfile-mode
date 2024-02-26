@@ -157,15 +157,12 @@ Lines beginning with a keyword are ignored, and any others are
 indented by one `dockerfile-indent-offset'. Functionality toggled
 by `dockerfile-enable-auto-indent'."
   (when dockerfile-enable-auto-indent
-    (unless (member (get-text-property (point-at-bol) 'face)
+    (unless (member (get-text-property (line-beginning-position) 'face)
              '(font-lock-comment-delimiter-face font-lock-keyword-face))
      (save-excursion
        (beginning-of-line)
-       (skip-chars-forward "[ \t]" (point-at-eol))
-       (unless (equal (point) (point-at-eol)) ; Ignore empty lines.
-         ;; Delete existing whitespace.
-         (delete-char (- (point-at-bol) (point)))
-         (indent-to dockerfile-indent-offset))))))
+       (unless (looking-at-p "\\s-*$") ; Ignore empty lines.
+         (indent-line-to dockerfile-indent-offset))))))
 
 (defun dockerfile-build-arg-string ()
   "Create a --build-arg string for each element in `dockerfile-build-args'."
