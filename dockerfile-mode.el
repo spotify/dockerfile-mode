@@ -1,7 +1,7 @@
 ;;; dockerfile-mode.el --- Major mode for editing Docker's Dockerfiles -*- lexical-binding: t -*-
 
 ;; Copyright (c) 2013 Spotify AB
-;; Package-Requires: ((emacs "24"))
+;; Package-Requires: ((emacs "24") (s "1.2.0"))
 ;; Homepage: https://github.com/spotify/dockerfile-mode
 ;; URL: https://github.com/spotify/dockerfile-mode
 ;; Version: 1.7
