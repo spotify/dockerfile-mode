@@ -29,7 +29,6 @@
 
 (require 'sh-script)
 (require 'rx)
-(require 's)
 
 
 (declare-function cygwin-convert-file-name-to-windows "cygw32.c" (file &optional absolute-p))
