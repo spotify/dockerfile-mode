@@ -72,6 +72,17 @@ Each element of the list will be passed as a separate
   :group 'dockerfile
   :type 'string)
 
+(defcustom dockerfile-build-extra-options nil
+  "Extra command-line options to send to docker build.
+
+Use this variable to add custom command-line switches not covered by
+existing dockerfile-build-* variables.
+
+Example:
+(setq-default dockerfile-build-extra-options \"--network host\")"
+  :group 'dockerfile
+  :type 'string)
+
 (defcustom dockerfile-use-buildkit nil
   "Use Docker buildkit for building images?
 
@@ -219,7 +230,7 @@ The shell command used to build the image is:
   (save-buffer)
     (compilation-start
         (format
-            "%s%s%s build %s %s %s %s %s --progress %s -f %s %s"
+            "%s%s%s build %s %s %s %s %s --progress %s %s -f %s %s"
             (if dockerfile-use-buildkit "DOCKER_BUILDKIT=1 " "")
             (if dockerfile-use-sudo "sudo " "")
             dockerfile-mode-command
@@ -229,6 +240,7 @@ The shell command used to build the image is:
             (dockerfile-tag-string image-name)
             (dockerfile-build-arg-string)
             dockerfile-build-progress
+            (or dockerfile-build-extra-options "")
             (shell-quote-argument (dockerfile-standard-filename
 				   (or (file-remote-p (buffer-file-name) 'localname)
 				       (buffer-file-name))))
