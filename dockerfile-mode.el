@@ -118,7 +118,7 @@ It is supported from docker 18.09"
                           "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"
                           "label" "stopsignal" "shell" "healthcheck"))
                word-boundary)
-           font-lock-keyword-face)
+           'font-lock-keyword-face)
     (,dockerfile--from-regex
      (1 'dockerfile-image-name)
      (2 'dockerfile-image-alias nil t))
