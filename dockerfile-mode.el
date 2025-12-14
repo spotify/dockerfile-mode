@@ -140,7 +140,7 @@ It is supported from docker 18.09"
     (define-key menu-map [dfb]
       '(menu-item "Build" dockerfile-build-buffer
                   :help "Send the Dockerfile to docker build"))
-    (define-key menu-map [dfb]
+    (define-key menu-map [dfbnc]
       '(menu-item "Build without cache" dockerfile-build-no-cache-buffer
                   :help "Send the Dockerfile to docker build without cache"))
     map))
