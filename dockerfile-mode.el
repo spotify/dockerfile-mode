@@ -110,7 +110,14 @@ It is supported from docker 18.09"
   "Face to highlight the base image alias inf FROM ... AS <alias> construct.")
 
 (defconst dockerfile--from-regex
-  (rx "from " (group (+? nonl)) (or (1+ " ") eol) (? "as " (group (1+ nonl)))))
+  (rx line-start (* blank) "from" (+ blank)
+      (? "--platform=" (+ (not (any blank "\n"))) (+ blank))
+      (group (+ (not (any blank "\n"))))
+      (* blank)
+      (? "as" (+ blank) (group (+ (not (any blank "\n")))))
+      (* blank)
+      (? "#" (* nonl))
+      line-end))
 
 (defvar dockerfile-font-lock-keywords
   `(,(cons (rx (or line-start "onbuild ")
