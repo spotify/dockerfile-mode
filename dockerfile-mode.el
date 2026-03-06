@@ -120,19 +120,29 @@ It is supported from docker 18.09"
       line-end))
 
 (defvar dockerfile-font-lock-keywords
-  `(,(cons (rx (or line-start "onbuild ")
-               (group (or "from" "maintainer" "run" "cmd" "expose" "env" "arg"
-                          "add" "copy" "entrypoint" "volume" "user" "workdir" "onbuild"
-                          "label" "stopsignal" "shell" "healthcheck"))
-               word-boundary)
-           'font-lock-keyword-face)
-    (,dockerfile--from-regex
-     (1 'dockerfile-image-name)
-     (2 'dockerfile-image-alias nil t))
-    ,@(sh-font-lock-keywords)
-    ,@(sh-font-lock-keywords-2)
-    ,@(sh-font-lock-keywords-1))
-  "Default `font-lock-keywords' for `dockerfile mode'.")
+  (let* ((keywords '("from" "maintainer" "run" "cmd" "expose" "env" "arg"
+                     "add" "copy" "entrypoint" "volume" "user" "workdir"
+                     "onbuild" "label" "stopsignal" "shell" "healthcheck"))
+         ;; case-insensitive keyword regex
+         (kw-regex (regexp-opt keywords 'words)))
+    `(;; warning for leading spaces -- use regular string, not rx
+      (,(concat "^\\s-+\\(" kw-regex "\\)")
+       (1 font-lock-warning-face))
+      ;; normal keyword highlighting
+      (,(concat "^\\s-*\\(" kw-regex "\\)")
+       (1 font-lock-keyword-face))
+      ;; other rules as before
+      (,dockerfile--from-regex
+       (1 'dockerfile-image-name)
+       (2 'dockerfile-image-alias nil t))
+      ,@(sh-font-lock-keywords)
+      ,@(sh-font-lock-keywords-2)
+      ,@(sh-font-lock-keywords-1)))
+  "Default `font-lock-keywords' for `dockerfile mode'.
+- Highlights official Dockerfile instructions (e.g., FROM, RUN, COPY) in
+ a case-insensitive manner using `regexp-opt` with the 'words option.
+- Issues a warning (`font-lock-warning-face`) if an instruction begins
+ with leading spaces, which may be invalid in Dockerfile syntax.")
 
 (defvar dockerfile-mode-map
   (let ((map (make-sparse-keymap))
